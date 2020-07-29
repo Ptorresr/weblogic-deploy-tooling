@@ -1476,7 +1476,7 @@ class AliasEntries(object):
         :param value: the original value
         :return: the modified value, or the original if not curly braces were embedded
         """
-        str_value = str(value)
+        str_value = unicode(value)
         if '${' in str_value:
             parts = alias_utils.parse_curly_braces(str_value)
             return parts[self._wlst_mode]

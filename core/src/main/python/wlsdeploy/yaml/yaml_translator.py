@@ -230,9 +230,9 @@ class PythonToYaml(object):
             if len(new_value) > 1:
                 new_value = new_value[:-1]
             new_value += ' ]'
-            result = str(new_value)
+            result = unicode(new_value)
         else:
-            result = self._quotify_string(str(value))
+            result = self._quotify_string(unicode(value))
         return result
 
     def _close_streams(self, fos, writer):

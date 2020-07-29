@@ -414,7 +414,7 @@ class Deployer(object):
         :return: True, if the directory was created, False otherwise
         """
         _method_name = '__process_directory_entry'
-        self.logger.entering(str(path), class_name=self._class_name, method_name=_method_name)
+        self.logger.entering(path, class_name=self._class_name, method_name=_method_name)
 
         result = False
         if not os.path.isdir(path):

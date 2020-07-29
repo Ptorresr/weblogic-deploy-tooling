@@ -250,7 +250,7 @@ def main(args):
 
     __logger.entering(args[0], class_name=_class_name, method_name=_method_name)
     for index, arg in enumerate(args):
-        __logger.finer('sys.argv[{0}] = {1}', str(index), str(arg), class_name=_class_name, method_name=_method_name)
+        __logger.finer('sys.argv[{0}] = {1}', index, arg, class_name=_class_name, method_name=_method_name)
 
     __wlst_helper.silence()
 

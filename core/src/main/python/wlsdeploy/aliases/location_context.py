@@ -151,6 +151,9 @@ class LocationContext(object):
         return len(self._model_folders) == 0
 
     def __str__(self):
+        return unicode(self).encode('utf8')
+
+    def __unicode__(self):
         location_model_folders = 'model_folders = %s' % (str(self._model_folders))
         tmp = ''
         for key, value in self._name_tokens.iteritems():

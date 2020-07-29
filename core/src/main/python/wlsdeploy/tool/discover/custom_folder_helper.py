@@ -9,6 +9,7 @@ import java.lang.Enum as Enum
 import java.lang.Exception as JException
 import java.lang.Integer as Integer
 import java.lang.Long as Long
+import java.lang.Object as Object
 import java.lang.NumberFormatException as NumberFormatException
 import java.lang.String as String
 import java.math.BigInteger as BigInteger
@@ -126,7 +127,7 @@ class CustomFolderHelper(object):
                 if model_type == alias_constants.PASSWORD:
                     print_orig = alias_constants.MASKED
                     print_conv = print_orig
-                _logger.finer('WLSDPLY-06770', mbean_string, attribute_name, model_type, str(print_conv),
+                _logger.finer('WLSDPLY-06770', mbean_string, attribute_name, model_type, print_conv,
                               class_name=_class_name, method_name=_method_name)
                 default_value = self.__get_default_value(attribute_helper, attribute_name)
                 if not is_empty(model_value):
@@ -284,7 +285,7 @@ class CustomFolderHelper(object):
     def __offline_default(self, model_value, model_type, default_value):
         _method_name = '__offline_default'
         if self._model_context.is_wlst_offline() and is_empty(model_value) and not is_empty(default_value):
-            _logger.fine('WLSDPLY-06775', model_type, str(model_value), str(default_value),
+            _logger.fine('WLSDPLY-06775', model_type, model_value, default_value,
                          class_name=_class_name, method_name=_method_name)
             return True
         return False
@@ -293,7 +294,7 @@ class CustomFolderHelper(object):
         _method_name = '__offline_default_numeric'
         if self._model_context.is_wlst_offline() and \
                 (model_value is None or model_value == 0) and default_value != 0:
-            _logger.fine('WLSDPLY-06775', model_type, str(model_value), str(default_value),
+            _logger.fine('WLSDPLY-06775', model_type, model_value, default_value,
                          class_name=_class_name, method_name=_method_name)
             return True
         return False
@@ -366,7 +367,7 @@ def security_provider_interface_name(mbean_instance, mbean_interface_name):
         result = getter()
         if result.endswith('ProviderMBean'):
             result = mbean_interface_name
-            _logger.warning('WLSDPLY-06779', str(mbean_instance), class_name=_class_name, method_name=_method_name)
+            _logger.warning('WLSDPLY-06779', mbean_instance, class_name=_class_name, method_name=_method_name)
     except (Exception, JException):
         _logger.warning('WLSDPLY-06778', mbean_interface_name, class_name=_class_name, method_name=_method_name)
         result = mbean_interface_name
@@ -456,7 +457,12 @@ def convert_string(value):
     """
     converted = None
     if not is_empty(value):
-        converted = str(value)
+        if isinstance(value, basestring):
+            converted = value
+        elif isinstance(value, Object):
+            converted = String.valueOf(value)
+        else:
+            converted = unicode(value)
     return converted
 
 
@@ -468,7 +474,7 @@ def convert_boolean(boolean_value):
 
 def convert_byte_buffer(buffer_value):
     if buffer_value is not None:
-        return str(String(buffer_value))
+        return unicode(String(buffer_value))
     return None
 
 
@@ -524,7 +530,7 @@ def convert_value(value):
             converted = value.getKeyProperty('Name')
         elif isinstance(value, String):
             converted_type = alias_constants.STRING
-            converted = str(value)
+            converted = unicode(value)
         elif isinstance(value, Enum):
             converted_type = alias_constants.STRING
             converted = str(value.toString())

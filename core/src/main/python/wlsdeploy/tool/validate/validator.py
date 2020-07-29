@@ -359,10 +359,10 @@ class Validator(object):
 
         if attribute_location is not None:
             valid_attr_infos = self._aliases.get_model_attribute_names_and_types(attribute_location)
-            self._logger.finer('WLSDPLY-05012', str(attribute_location), str(valid_attr_infos),
+            self._logger.finer('WLSDPLY-05012', str(attribute_location), valid_attr_infos,
                                class_name=_class_name, method_name=_method_name)
             path_tokens_attr_keys = self._aliases.get_model_uses_path_tokens_attribute_names(attribute_location)
-            self._logger.finer('WLSDPLY-05013', str(attribute_location), str(path_tokens_attr_keys),
+            self._logger.finer('WLSDPLY-05013', str(attribute_location), path_tokens_attr_keys,
                                class_name=_class_name, method_name=_method_name)
 
         model_section_dict = model_dict[model_section_key]
@@ -535,12 +535,12 @@ class Validator(object):
         valid_attr_infos = self._aliases.get_model_attribute_names_and_types(validation_location)
         model_folder_path = self._aliases.get_model_folder_path(validation_location)
 
-        self._logger.finest('5 model_node={0}', str(model_node), class_name=_class_name, method_name=_method_name)
+        self._logger.finest('5 model_node={0}', model_node, class_name=_class_name, method_name=_method_name)
         self._logger.finest('5 aliases.get_model_subfolder_names(validation_location) returned: {0}',
-                            str(valid_folder_keys),
+                            valid_folder_keys,
                             class_name=_class_name, method_name=_method_name)
         self._logger.finest('5 aliases.get_model_attribute_names_and_types(validation_location) returned: {0}',
-                            str(valid_attr_infos),
+                            valid_attr_infos,
                             class_name=_class_name, method_name=_method_name)
         self._logger.finest('5 model_folder_path={0}', model_folder_path, class_name=_class_name,
                             method_name=_method_name)
@@ -631,11 +631,11 @@ class Validator(object):
     def __validate_attributes(self, attributes_dict, valid_attr_infos, validation_location):
         _method_name = '__validate_attributes'
 
-        self._logger.finest('attributes_dict={0}', str(attributes_dict),
+        self._logger.finest('attributes_dict={0}', attributes_dict,
                             class_name=_class_name, method_name=_method_name)
 
         path_tokens_attr_keys = self._aliases.get_model_uses_path_tokens_attribute_names(validation_location)
-        self._logger.finer('WLSDPLY-05013', str(validation_location), str(path_tokens_attr_keys),
+        self._logger.finer('WLSDPLY-05013', str(validation_location), path_tokens_attr_keys,
                            class_name=_class_name, method_name=_method_name)
 
         model_folder_path = self._aliases.get_model_folder_path(validation_location)
@@ -649,14 +649,14 @@ class Validator(object):
         _method_name = '__validate_attribute'
 
         log_value = self.__get_attribute_log_value(attribute_name, attribute_value, valid_attr_infos)
-        self._logger.entering(attribute_name, log_value, str(valid_attr_infos), str(path_tokens_attr_keys),
+        self._logger.entering(attribute_name, log_value, valid_attr_infos, path_tokens_attr_keys,
                               model_folder_path, str(validation_location),
                               class_name=_class_name, method_name=_method_name)
 
         if variables.has_variables(attribute_name):
             self._report_unsupported_variable_usage(attribute_name, model_folder_path)
 
-        if variables.has_variables(str(attribute_value)):
+        if variables.has_variables(unicode(attribute_value)):
             attribute_value = self.__validate_variable_substitution(attribute_value, model_folder_path)
 
         if attribute_name in valid_attr_infos:
@@ -684,7 +684,7 @@ class Validator(object):
     def __validate_properties(self, properties_dict, valid_prop_infos, validation_location):
         _method_name = '__validate_properties'
 
-        self._logger.entering(str(properties_dict), str(validation_location),
+        self._logger.entering(properties_dict, str(validation_location),
                               class_name=_class_name, method_name=_method_name)
 
         for property_name, property_value in properties_dict.iteritems():
@@ -697,13 +697,13 @@ class Validator(object):
 
         _method_name = '__validate_property'
 
-        self._logger.entering(property_name, property_value, str(valid_prop_infos), model_folder_path,
+        self._logger.entering(property_name, property_value, valid_prop_infos, model_folder_path,
                               class_name=_class_name, method_name=_method_name)
 
         if variables.has_variables(property_name):
             property_name = self.__validate_variable_substitution(property_name, model_folder_path)
 
-        if variables.has_variables(str(property_value)):
+        if variables.has_variables(unicode(property_value)):
             property_value = self.__validate_variable_substitution(property_value, model_folder_path)
 
         if property_name in valid_prop_infos:
@@ -818,7 +818,7 @@ class Validator(object):
                                         class_name=_class_name, method_name=_method_name)
         else:
             tokens = validation_utils.extract_path_tokens(path)
-            self._logger.finest('tokens={0}', str(tokens), class_name=_class_name, method_name=_method_name)
+            self._logger.finest('tokens={0}', tokens, class_name=_class_name, method_name=_method_name)
             # TODO(mwooten) - This would be a good place to validate any path token found...
 
             if not self._model_context.has_token_prefix(path):
@@ -861,9 +861,9 @@ class Validator(object):
             else:
                 model_folder_path += '/' + attribute_key
                 for key, value in attribute_value.iteritems():
-                    if type(key) is not str:
+                    if type(key) not in [str, unicode]:
                         # Force the key to a string for any value validation issues reported below
-                        key = str(key)
+                        key = unicode(key)
                         self._logger.severe('WLSDPLY-05033', key, model_folder_path, str(type(key)),
                                             class_name=_class_name, method_name=__method_name)
                     else:
@@ -889,10 +889,10 @@ class Validator(object):
         _method_name = '_validate_single_server_group_target_limits_value'
 
         if type(value) is str:
-            if variables.has_variables(str(value)):
-                self._report_unsupported_variable_usage(str(value), model_folder_path)
+            if variables.has_variables(unicode(value)):
+                self._report_unsupported_variable_usage(unicode(value), model_folder_path)
         else:
-            self._logger.severe('WLSDPLY-05035', key, str(value), model_folder_path, str(type(value)),
+            self._logger.severe('WLSDPLY-05035', key, value, model_folder_path, str(type(value)),
                                 class_name=_class_name, method_name=_method_name)
 
     def __validate_wlsroles_section(self, attribute_value):

@@ -604,7 +604,7 @@ class Discoverer(object):
         :param file_name: to check for oracle home or weblogic home
         :return: true if in oracle home location
         """
-        py_str = path_utils.fixup_path(str(file_name))
+        py_str = path_utils.fixup_path(unicode(file_name))
         return (not py_str.startswith(self._model_context.get_domain_home())) and \
             (py_str.startswith(self._model_context.get_oracle_home()) or
              py_str.startswith(self._model_context.get_wl_home()))
@@ -634,7 +634,7 @@ class Discoverer(object):
             else:
                 interfaces = location_object.getClass().getInterfaces()
                 if not interfaces:
-                    _logger.info('WLSDPLY-06124', str(location), str(location_object))
+                    _logger.info('WLSDPLY-06124', str(location), location_object)
                 else:
                     mbean_name = self._find_mbean_interface(location, interfaces)
         _logger.exiting(class_name=_class_name, method_name=_method_name, result=mbean_name)

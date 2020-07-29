@@ -236,6 +236,6 @@ class TopologyUpdater(Deployer):
                 location.remove_name_token(name_token)
 
         self.logger.exiting(class_name=self._class_name, method_name=_method_name,
-                            result='configured_clusters=' + str(existing_configured_clusters) +
-                                   ' managed servers=' + str(existing_managed_servers))
+                            result=u'configured_clusters=' + unicode(existing_configured_clusters) +
+                                   u' managed servers=' + unicode(existing_managed_servers))
         return existing_configured_clusters, existing_managed_servers

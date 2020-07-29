@@ -637,7 +637,7 @@ def convert_to_model_type(data_type, value, delimiter=None):
         # java.lang.String() is able to properly convert it to the cipher text string.  However,
         # we don't really want to return a java.lang.String to the caller so convert that Java
         # String back to a Python string...ugly but effective.
-        new_value = str(String(value))
+        new_value = unicode(String(value))
     elif value is not None and isinstance(value, ObjectName):
         new_value = value.getKeyProperty('Name')
     else:
@@ -664,7 +664,7 @@ def convert_to_type(data_type, value, subtype=None, delimiter=None):
         # java.lang.String() is able to properly convert it to the cipher text string.  However,
         # we don't really want to return a java.lang.String to the caller so convert that Java
         # String back to a Python string...ugly but effective.
-        new_value = str(String(value))
+        new_value = unicode(String(value))
     else:
         try:
             new_value = TypeUtils.convertToType(data_type, value, delimiter)
@@ -981,7 +981,7 @@ def _properties_to_string(props, string_props_separator_char):
             value = entry_set.getValue()
             if len(result) > 0:
                 result += string_props_separator_char
-            result += str(key) + '=' + str(value)
+            result += unicode(key) + '=' + unicode(value)
     _logger.exiting(class_name=_class_name, method_name=_method_name, result=result)
     return result
 
@@ -1056,7 +1056,7 @@ def _create_string_jarray(iterable):
         elif isinstance(element, ObjectName):
             myarray[idx] = ObjectName.unquote(element.getKeyProperty('Name'))
         else:
-            myarray[idx] = str(element)
+            myarray[idx] = unicode(element)
         idx += 1
     return myarray
 
@@ -1075,7 +1075,7 @@ def _create_array(iterable, delimiter):
             if isinstance(element, ObjectName):
                 myarray.append(element.getKeyProperty('Name'))
             elif delimiter or isinstance(element, String):
-                myarray.append(str(element))
+                myarray.append(unicode(element))
             else:
                 myarray.append(element)
     return myarray

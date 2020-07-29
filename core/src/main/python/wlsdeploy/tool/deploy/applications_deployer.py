@@ -894,7 +894,7 @@ class ApplicationsDeployer(Deployer):
             source_path = self.model_context.get_domain_home() + '/' + source_path
 
         if not os.path.exists(source_path):
-            ex = exception_helper.create_deploy_exception('WLSDPLY-09318', application_name, str(source_path))
+            ex = exception_helper.create_deploy_exception('WLSDPLY-09318', application_name, source_path)
             self.logger.throwing(ex, class_name=self._class_name, method_name=_method_name)
             raise ex
 
@@ -904,7 +904,7 @@ class ApplicationsDeployer(Deployer):
 
         # build the dictionary of named arguments to pass to the deploy_application method
         args = list()
-        kwargs = {'path': str(source_path), 'targets': str(targets)}
+        kwargs = {'path': unicode(source_path), 'targets': unicode(targets)}
         if plan is not None:
             if not os.path.isabs(plan):
                 plan = self.model_context.get_domain_home() + '/' + plan
@@ -913,13 +913,13 @@ class ApplicationsDeployer(Deployer):
                 ex = exception_helper.create_deploy_exception('WLSDPLY-09319', application_name, plan)
                 self.logger.throwing(ex, class_name=self._class_name, method_name=_method_name)
                 raise ex
-            kwargs['planPath'] = str(plan)
+            kwargs['planPath'] = unicode(plan)
         if resource_group is not None:
-            kwargs['resourceGroup'] = str(resource_group)
+            kwargs['resourceGroup'] = unicode(resource_group)
         if resource_group_template is not None:
-            kwargs['resourceGroupTemplate'] = str(resource_group_template)
+            kwargs['resourceGroupTemplate'] = unicode(resource_group_template)
         if partition is not None:
-            kwargs['partition'] = str(partition)
+            kwargs['partition'] = unicode(partition)
         if options is not None:
             for key, value in options.iteritems():
                 kwargs[key] = value
@@ -1110,7 +1110,7 @@ class ApplicationsDeployer(Deployer):
         if name_sorted_keys is not None:
             result_deploy_order.extend(name_sorted_keys)
 
-        self.logger.fine('WLSDPLY-09326', str(result_deploy_order),
+        self.logger.fine('WLSDPLY-09326', result_deploy_order,
                          class_name=self._class_name, method_name=_method_name)
         return result_deploy_order
 
@@ -1162,7 +1162,7 @@ def _get_deploy_options(model_apps, app_name, library_module):
             option_name = 'stageMode'
 
         if value is not None:
-            deploy_options[option_name] = str(value)
+            deploy_options[option_name] = unicode(value)
 
     if library_module == 'true':
         deploy_options['libraryModule'] = 'true'

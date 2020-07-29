@@ -72,7 +72,7 @@ class CustomFolderHelper(object):
 
         property_map = dict()
         for property_descriptor in bean_info.getPropertyDescriptors():
-            self.logger.finer('WLSDPLY-12126', str(property_descriptor), class_name=self.__class_name,
+            self.logger.finer('WLSDPLY-12126', property_descriptor, class_name=self.__class_name,
                               method_name=_method_name)
             property_map[property_descriptor.getName()] = property_descriptor
 
@@ -91,11 +91,11 @@ class CustomFolderHelper(object):
             method = property_descriptor.writeMethod
             if not method:
                 # this must be a read-only attribute, just log it and continue with next attribute
-                self.logger.info('WLSDPLY-12129', str(model_key), class_name=self.__class_name,
+                self.logger.info('WLSDPLY-12129', model_key, class_name=self.__class_name,
                                  method_name=_method_name)
                 continue
 
-            self.logger.finer('WLSDPLY-12127', str(model_key), str(model_value), class_name=self.__class_name,
+            self.logger.finer('WLSDPLY-12127', model_key, model_value, class_name=self.__class_name,
                               method_name=_method_name)
 
             # determine the data type from the set method
@@ -127,7 +127,7 @@ class CustomFolderHelper(object):
             # failure converting value or calling method
             except (IllegalAccessException, IllegalArgumentException, InvocationTargetException), ex:
                 ex = exception_helper.create_exception(self.exception_type, 'WLSDPLY-12131', method,
-                                                       str(model_value), ex.getLocalizedMessage(), error=ex)
+                                                       model_value, ex.getLocalizedMessage(), error=ex)
                 self.logger.throwing(ex, class_name=self.__class_name, method_name=_method_name)
                 raise ex
 

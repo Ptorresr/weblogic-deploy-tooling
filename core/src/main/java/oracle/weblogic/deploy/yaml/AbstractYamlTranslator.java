@@ -29,6 +29,7 @@ import org.python.core.PyList;
 import org.python.core.PyLong;
 import org.python.core.PyObject;
 import org.python.core.PyString;
+import org.python.core.PyUnicode;
 
 /**
  * This class does the heavy-lifting of walking the parse tree and performing the conversion into a Python dictionary.
@@ -77,7 +78,7 @@ public abstract class AbstractYamlTranslator extends YamlBaseListener {
 
         // null indicates not parsable, Py.None would be returned for legitimate cases
         if (value != null) {
-            container.__setitem__(new PyString(name), value);
+            container.__setitem__(new PyUnicode(name), value);
         }
     }
 
@@ -130,14 +131,14 @@ public abstract class AbstractYamlTranslator extends YamlBaseListener {
             objDict = new PyDictionary();
         }
         PyDictionary container = currentDict.peek();
-        if (container.has_key(new PyString(name))) {
+        if (container.has_key(new PyUnicode(name))) {
             String message = ExceptionHelper.getMessage("WLSDPLY-18028", name);
             ParseCancellationException ex =
                 new ParseCancellationException(message);
             getLogger().throwing(getClassName(), METHOD, ex);
             throw ex;
         }
-        container.__setitem__(new PyString(name), objDict);
+        container.__setitem__(new PyUnicode(name), objDict);
         currentDict.push(objDict);
 
         // In case this is the name for a list of values, save it off...
@@ -154,7 +155,7 @@ public abstract class AbstractYamlTranslator extends YamlBaseListener {
             currentDict.pop();
 
             PyDictionary container = currentDict.peek();
-            container.__setitem__(new PyString(lastObjectName), openObjectList);
+            container.__setitem__(new PyUnicode(lastObjectName), openObjectList);
 
             // zero out the open list
             openObjectList = null;
@@ -353,7 +354,8 @@ public abstract class AbstractYamlTranslator extends YamlBaseListener {
 
         PyObject value = Py.None;
         if (newString != null) {
-            value = new PyString(newString);
+            System.out.println("****** value " + newString.getClass().getSimpleName());
+            value = new PyUnicode(newString);
         }
         return value;
     }
@@ -363,7 +365,7 @@ public abstract class AbstractYamlTranslator extends YamlBaseListener {
 
         PyObject value = Py.None;
         if (newString != null) {
-            value = new PyString(newString);
+            value = new PyUnicode(newString);
         }
         return value;
     }

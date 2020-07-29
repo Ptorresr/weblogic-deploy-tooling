@@ -2,6 +2,7 @@
 Copyright (c) 2017, 2020, Oracle Corporation and/or its affiliates.  All rights reserved.
 Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 """
+from java.lang import Object
 from java.lang import String
 from oracle.weblogic.deploy.aliases import AliasException
 from oracle.weblogic.deploy.aliases import TypeUtils
@@ -1006,7 +1007,7 @@ class Aliases(object):
                         model_attribute_value = self._model_context.tokenize_classpath(converted_value)
                     if model_attribute_value == default_value:
                         model_attribute_value = None
-                elif str(converted_value) != str(default_value):
+                elif unicode(converted_value) != unicode(default_value):
                     if _strings_are_empty(converted_value, default_value):
                         model_attribute_value = None
                     else:
@@ -1187,7 +1188,7 @@ class Aliases(object):
         :return: the clear text
         :raises EncryptionException: if an error occurs while decrypting the password
         """
-        if text is None or len(str(text)) == 0 or \
+        if text is None or len(unicode(text)) == 0 or \
                 (self._model_context and not self._model_context.is_using_encryption()) or \
                 not EncryptionUtils.isEncryptedString(text):
 
@@ -1295,8 +1296,10 @@ class Aliases(object):
 def _convert_to_string(value):
     if type(value) in [str, unicode]:
         str_converted_value = value
+    elif isinstance(value, Object):
+        str_converted_value = value.toString()
     else:
-        str_converted_value = str(value)
+        str_converted_value = unicode(value)
     return str_converted_value
 
 

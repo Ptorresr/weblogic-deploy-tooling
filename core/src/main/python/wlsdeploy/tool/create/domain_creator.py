@@ -221,7 +221,7 @@ class DomainCreator(Creator):
                 break
 
         if error:
-            ex = exception_helper.create_create_exception('WLSDPLY-12413', last_error, str(keys))
+            ex = exception_helper.create_create_exception('WLSDPLY-12413', last_error, keys)
             self.logger.throwing(ex, class_name=self.__class_name, method_name=_method_name)
             raise ex
 
